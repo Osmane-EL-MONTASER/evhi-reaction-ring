@@ -124,6 +124,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   respawnTimer: 3
   respawnTime: 0
+  scoreManager: {fileID: 0}
 --- !u!54 &6596569775233245409
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -233,6 +234,18 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 7390553463975553142, guid: 7ab6f3b0fd1a6ba41b2a47766c16613f, type: 3}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Material, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8307159668300846098}
+        m_TargetAssemblyTypeName: Stick, Assembly-CSharp
+        m_MethodName: onGrab
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 7390553463975553142, guid: 7ab6f3b0fd1a6ba41b2a47766c16613f, type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 

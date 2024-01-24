@@ -11,10 +11,15 @@ public class Stick : MonoBehaviour {
     public float respawnTime;
 
     private bool needRespawn = false;
+    private bool isFalling = false;
+    private bool isGrabbed = false;
+
+    public GameObject scoreManager;
 
     // Start is called before the first frame update
     void Start() {
         initialPosition = transform.position;
+        scoreManager = GameObject.Find("Score Manager");
     }
 
     // Update is called once per frame
@@ -25,6 +30,8 @@ public class Stick : MonoBehaviour {
             rb.velocity = Vector3.zero;
             transform.position = initialPosition;
             needRespawn = false;
+            isFalling = false;
+            isGrabbed = false;
             Debug.Log("Respawn");
         }
     }
@@ -37,10 +44,20 @@ public class Stick : MonoBehaviour {
             Debug.Log("Fall");
             respawnTime = respawnTimer + Time.time;
             needRespawn = true;
+            if (!isGrabbed)
+                scoreManager.GetComponent<ScoreManager>().AddFailed(1);
         }
     }
 
-
+    public void onGrab()
+    {
+        if (isFalling && !isGrabbed)
+        {
+            Debug.Log("Grab");
+            isGrabbed = true;
+            scoreManager.GetComponent<ScoreManager>().AddScore(1);
+        }
+    }
 
     /// <summary>
     /// Drop the stick by applying a force to it.
@@ -57,6 +74,7 @@ public class Stick : MonoBehaviour {
         rb.isKinematic = false;
         // On applique une force au stick pour le faire tomber
         rb.AddForce(Vector3.down * 100.0f);
+        isFalling = true;
     }
 
     /// <summary>
