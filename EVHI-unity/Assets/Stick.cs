@@ -1,17 +1,46 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Stick : MonoBehaviour {
+    //Set stick initial position
+    private Vector3 initialPosition;
+
+    public float respawnTimer = 3.0f;
+    public float respawnTime;
+
+    private bool needRespawn = false;
+
     // Start is called before the first frame update
     void Start() {
-        
+        initialPosition = transform.position;
     }
 
     // Update is called once per frame
     void Update() {
-        
+        if (Time.time > respawnTime && needRespawn)
+        {
+            Rigidbody rb = GetComponent<Rigidbody>();
+            rb.velocity = Vector3.zero;
+            transform.position = initialPosition;
+            needRespawn = false;
+            Debug.Log("Respawn");
+        }
     }
+
+    // When the stick touch trigger box, make it invisible and make it visible again after 3 seconds to its initial position
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Fall Zone")
+        {
+            Debug.Log("Fall");
+            respawnTime = respawnTimer + Time.time;
+            needRespawn = true;
+        }
+    }
+
+
 
     /// <summary>
     /// Drop the stick by applying a force to it.
@@ -45,4 +74,6 @@ public class Stick : MonoBehaviour {
         // Add the length difference with a base scale 1.0f to the stick's Y position
         stickTransform.position -= new Vector3(0.0f, (length - 1.0f) / 2.0f, 0.0f);
     }
+
+    
 }

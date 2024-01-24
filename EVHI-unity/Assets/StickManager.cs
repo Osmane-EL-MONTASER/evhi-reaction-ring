@@ -9,6 +9,7 @@ public class StickManager : MonoBehaviour {
     public float minSecondsBetweenDrops = 1.0f;
     public float maxSecondsBetweenDrops = 3.0f;
 
+    private float nextDropTime = 0.0f;
     // Start is called before the first frame update
     void Start() {
         // On rescale tous les sticks pour qu'ils aient la bonne longueur
@@ -23,7 +24,12 @@ public class StickManager : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        
+        if (Time.time > nextDropTime)
+        {
+            DropRandomStick();
+            nextDropTime += Random.Range(minSecondsBetweenDrops, maxSecondsBetweenDrops);
+        }
+ 
     }
 
     /// <summary>
