@@ -2736,34 +2736,6 @@ PrefabInstance:
       propertyPath: m_InteractionManager
       value: 
       objectReference: {fileID: 1084332475}
-    - target: {fileID: 4639419061361403973, guid: bb7a81b9409845f4fb664aeac90e8156, type: 3}
-      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 4639419061361403973, guid: bb7a81b9409845f4fb664aeac90e8156, type: 3}
-      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4639419061361403973, guid: bb7a81b9409845f4fb664aeac90e8156, type: 3}
-      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[1].m_Target
-      value: 
-      objectReference: {fileID: 1358814677}
-    - target: {fileID: 4639419061361403973, guid: bb7a81b9409845f4fb664aeac90e8156, type: 3}
-      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 4639419061361403973, guid: bb7a81b9409845f4fb664aeac90e8156, type: 3}
-      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
-      value: onGrab
-      objectReference: {fileID: 0}
-    - target: {fileID: 4639419061361403973, guid: bb7a81b9409845f4fb664aeac90e8156, type: 3}
-      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
-      value: Stick, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 4639419061361403973, guid: bb7a81b9409845f4fb664aeac90e8156, type: 3}
-      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
     - target: {fileID: 6026222236838166801, guid: bb7a81b9409845f4fb664aeac90e8156, type: 3}
       propertyPath: m_LocalPosition.x
       value: 11.1
@@ -2817,17 +2789,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bb7a81b9409845f4fb664aeac90e8156, type: 3}
---- !u!114 &1358814677 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8307159668300846098, guid: bb7a81b9409845f4fb664aeac90e8156, type: 3}
-  m_PrefabInstance: {fileID: 1260063898}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bbdf1a23a039c064ea7ec85bf56e6461, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1395868449 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6026222236838166801, guid: bb7a81b9409845f4fb664aeac90e8156, type: 3}
