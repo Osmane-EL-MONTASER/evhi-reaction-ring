@@ -16,6 +16,8 @@ public class Stick : MonoBehaviour {
 
     public GameObject scoreManager;
 
+    private float stickSpeed = 1.0f;
+
     // Start is called before the first frame update
     void Start() {
         initialPosition = transform.position;
@@ -32,8 +34,18 @@ public class Stick : MonoBehaviour {
             needRespawn = false;
             isFalling = false;
             isGrabbed = false;
-            Debug.Log("Respawn");
+            //Debug.Log("Respawn");
         }
+    }
+
+    public void ResetStick()
+    {
+        Rigidbody rb = GetComponent<Rigidbody>();
+        rb.velocity = Vector3.zero;
+        transform.position = initialPosition;
+        needRespawn = false;
+        isFalling = false;
+        isGrabbed = false;
     }
 
     // When the stick touch trigger box, make it invisible and make it visible again after 3 seconds to its initial position
@@ -41,7 +53,7 @@ public class Stick : MonoBehaviour {
     {
         if (other.gameObject.tag == "Fall Zone")
         {
-            Debug.Log("Fall");
+            //Debug.Log("Fall");
             respawnTime = respawnTimer + Time.time;
             needRespawn = true;
             if (!isGrabbed)
@@ -53,7 +65,7 @@ public class Stick : MonoBehaviour {
     {
         if (isFalling && !isGrabbed)
         {
-            Debug.Log("Grab");
+            //Debug.Log("Grab");
             isGrabbed = true;
             scoreManager.GetComponent<ScoreManager>().AddScore(1);
         }
@@ -67,13 +79,13 @@ public class Stick : MonoBehaviour {
     /// This function is called by the Stick Manager.
     /// </remarks>
     public void DropStick() {
-        Debug.Log("DropStick");
+        //Debug.Log("DropStick");
         // On récupère le rigidbody du stick
         Rigidbody rb = GetComponent<Rigidbody>();
         // On active le rigidbody
         rb.isKinematic = false;
         // On applique une force au stick pour le faire tomber
-        rb.AddForce(Vector3.down * 100.0f);
+        rb.AddForce(Vector3.down * stickSpeed);
         isFalling = true;
     }
 
@@ -93,5 +105,7 @@ public class Stick : MonoBehaviour {
         stickTransform.position -= new Vector3(0.0f, (length - 1.0f) / 2.0f, 0.0f);
     }
 
-    
+    public void SetStickSpeed(float speed) {
+        stickSpeed = speed;
+    }
 }

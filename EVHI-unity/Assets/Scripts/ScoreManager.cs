@@ -2,18 +2,150 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using System.Net.Sockets;
+using System.Threading;
+using System.Text;
+using System.Net;
+using System.Globalization;
+
 public class ScoreManager : MonoBehaviour
 {
     public float currentScore = 0;
     public float failed = 0;
 
+    public bool isFirstLaunch = true;
+
+    public List<float> performances = new List<float>();
+    public List<float> StickSpeeds = new List<float>();
+
+    public bool IsStickSpeedsReady = false;
+
     public TMPro.TextMeshProUGUI scoreText;
     public TMPro.TextMeshProUGUI failedText;
+
+    public TMPro.TextMeshProUGUI stickLeftText;
+
+    private TcpListener server;
+    private Thread listenerThread;
+    private bool isRunning = true;
 
     // Start is called before the first frame update
     void Start()
     {
+        Thread.CurrentThread.CurrentCulture = new CultureInfo("en-us");
+        server = new TcpListener(IPAddress.Parse("127.0.0.1"), 5000);
+        server.Start();
+        Debug.Log("Server started on localhost:5000");
+
+        listenerThread = new Thread(new ThreadStart(ListenForClients));
+        listenerThread.Start();
+    }
+
+    private void ListenForClients()
+    {
+        while (isRunning)
+        {
+            TcpClient client = server.AcceptTcpClient();
+            Debug.Log("Client connected");
+
+            Thread clientThread = new Thread(new ParameterizedThreadStart(HandleClient));
+            clientThread.Start(client);
+        }
+    }
+
+    private void HandleClient(object clientObject)
+    {
+        Thread.CurrentThread.CurrentCulture = new CultureInfo("en-us");
+        TcpClient client = (TcpClient)clientObject;
+        NetworkStream stream = client.GetStream();
+
+        byte[] buffer = new byte[1024];
+        int bytesRead;
+
+        Debug.Log("Waiting for data...");
+        while ((bytesRead = stream.Read(buffer, 0, buffer.Length)) > 0)
+        {
+            string data = Encoding.ASCII.GetString(buffer, 0, bytesRead);
+            Debug.Log("Received: " + data);
+
+            // Parse the data and return the speeds
+            lock ("lockStats")
+            {
+                StickSpeeds = ParseAndReturnSpeeds(data);
+                IsStickSpeedsReady = true;
+            }
+            
+
+            // When currentScore + failed = 10, we send the performances to the python script.
+
+            while (currentScore + failed < 10)
+            {
+                // Wait for the score to be 10
+            }
+
+            string performances_string = "[ ";
+            int i = 0;
+            // Lock the performances list to avoid concurrency issues
+            lock (performances)
+            {
+                foreach (float performance in performances)
+                {
+                    performances_string += performance.ToString() + " ";
+                    i++;
+                    if (i == 10)
+                    {
+                        break;
+                    }
+                }
+                performances_string += "]";
+
+                // Remove the first 10 elements of the list
+                performances.RemoveRange(0, 9);
+            }
+
+            Debug.Log("Sending: " + performances_string);
+
+            byte[] performances_bytes = Encoding.ASCII.GetBytes(performances_string);
+            stream.Write(performances_bytes, 0, performances_bytes.Length);
+            Debug.Log("Sent: " + performances_string);
+            
+            currentScore = 0;
+            failed = 0;
+            isFirstLaunch = true;
+        }
+
+        client.Close();
+        Debug.Log("Client disconnected");
+    }
+
+    private void OnApplicationQuit()
+    {
+        isRunning = false;
+        listenerThread.Abort();
+        server.Stop();
+    }
+
+    public List<float> ParseAndReturnSpeeds(string input)
+    {
+        List<float> stick_speeds = new List<float>();
         
+        // Supprimer les crochets [ et ] de la chaîne
+        input = input.Trim('[', ']');
+
+        // Diviser la chaîne en valeurs individuelles en utilisant l'espace comme séparateur
+        string[] speedValues = input.Split(' ');
+
+        // Convertir chaque valeur en float et l'ajouter à la liste
+        foreach (string speedValue in speedValues)
+        {
+            if (speedValue == "")
+            {
+                continue;
+            }
+            stick_speeds.Add(float.Parse(speedValue, CultureInfo.InvariantCulture.NumberFormat));
+        }
+
+        return stick_speeds;
     }
 
     // Update is called once per frame
@@ -24,13 +156,25 @@ public class ScoreManager : MonoBehaviour
     
     public void AddScore(float n)
     {
-        currentScore += n;
-        scoreText.text = currentScore.ToString();
+        lock (performances)
+        {
+            currentScore += n;
+            scoreText.text = currentScore.ToString();
+            stickLeftText.text = "Bâtons restants : " + (currentScore + failed).ToString() + " / 10. Bon courage !"; 
+        
+            performances.Add(85.0f);
+        }
     }
 
     public void AddFailed(float n)
     {
-        failed += n;
-        failedText.text = failed.ToString();
+        lock (performances)
+        {
+            failed += n;
+            failedText.text = failed.ToString();
+            stickLeftText.text = "Bâtons restants : " + (currentScore + failed).ToString() + " / 10. Bon courage !";
+        
+            performances.Add(0.0f);
+        }
     }
 }
