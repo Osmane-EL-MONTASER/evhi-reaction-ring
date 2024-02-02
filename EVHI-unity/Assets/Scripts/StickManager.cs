@@ -5,6 +5,8 @@ using System.Threading;
 
 public class StickManager : MonoBehaviour
 {
+    public GameObject performanceManager;
+    PerformanceManager performanceManagerScript;
 
     public float baseStickLength = 1.0f;
 
@@ -31,6 +33,8 @@ public class StickManager : MonoBehaviour
 
             stickScript.SetStickLength(baseStickLength);
         }
+    
+        performanceManagerScript = performanceManager.GetComponent<PerformanceManager>();
     }
 
     // Update is called once per frame
@@ -99,5 +103,6 @@ public class StickManager : MonoBehaviour
         Stick stickScript = stick.GetComponent<Stick>();
 
         stickScript.DropStick();
+        performanceManagerScript.addFallingStick(stickScript, Time.time);
     }
 }
