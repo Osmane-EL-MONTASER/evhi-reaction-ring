@@ -58,10 +58,10 @@
     <Analyzer Include="F:\Unity\2022.3.9f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Samples\XR Interaction Toolkit\2.4.3\Starter Assets\Editor\Scripts\StarterAssetsSampleProjectValidation.cs" />
+    <Compile Include="Assets\Samples\XR Interaction Toolkit\2.5.2\Starter Assets\Editor\Scripts\StarterAssetsSampleProjectValidation.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Samples\XR Interaction Toolkit\2.4.3\Starter Assets\Editor\Unity.XR.Interaction.Toolkit.Samples.StarterAssets.Editor.asmdef" />
+    <None Include="Assets\Samples\XR Interaction Toolkit\2.5.2\Starter Assets\Editor\Unity.XR.Interaction.Toolkit.Samples.StarterAssets.Editor.asmdef" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

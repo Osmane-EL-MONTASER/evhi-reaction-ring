@@ -56,7 +56,7 @@ public class StickManager : MonoBehaviour
 
                 m_stickFellCount = 0;
             }
-            else if(!ScoreManager.GetComponent<ScoreManager>().isFirstLaunch && ScoreManager.GetComponent<ScoreManager>().currentScore + ScoreManager.GetComponent<ScoreManager>().failed < 10)
+            else if(ScoreManager.GetComponent<ScoreManager>().currentScore + ScoreManager.GetComponent<ScoreManager>().failed < 10)
             {
                 if (Time.time > nextDropTime)
                 {
