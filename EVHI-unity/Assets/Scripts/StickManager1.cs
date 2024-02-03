@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Threading;
 
-public class StickManager : MonoBehaviour
+public class StickManager1 : MonoBehaviour
 {
     public GameObject performanceManager;
     PerformanceManager performanceManagerScript;
@@ -29,7 +29,7 @@ public class StickManager : MonoBehaviour
         for (int i = 0; i < nbChildren; i++)
         {
             GameObject stick = transform.GetChild(i).gameObject;
-            Stick stickScript = stick.GetComponent<Stick>();
+            Stick2 stickScript = stick.GetComponent<Stick2>();
 
             stickScript.SetStickLength(baseStickLength);
         }
@@ -53,7 +53,7 @@ public class StickManager : MonoBehaviour
                 for (int i = 0; i < nbChildren; i++)
                 {
                     GameObject stick = transform.GetChild(i).gameObject;
-                    Stick stickScript = stick.GetComponent<Stick>();
+                    Stick2 stickScript = stick.GetComponent<Stick2>();
 
                     stickScript.SetStickSpeed(ScoreManager.GetComponent<ScoreManager>().StickSpeeds[i]);
                 }
@@ -82,7 +82,7 @@ public class StickManager : MonoBehaviour
             for (int i = 0; i < nbChildren; i++)
             {
                 GameObject stick = transform.GetChild(i).gameObject;
-                Stick stickScript = stick.GetComponent<Stick>();
+                Stick2 stickScript = stick.GetComponent<Stick2>();
 
                 stickScript.ResetStick();
             }
@@ -100,7 +100,7 @@ public class StickManager : MonoBehaviour
         int randomIndex = Random.Range(0, nbChildren); // On récupère un nombre aléatoire entre 0 et le nombre d'enfants
 
         GameObject stick = transform.GetChild(randomIndex).gameObject;
-        Stick stickScript = stick.GetComponent<Stick>();
+        Stick2 stickScript = stick.GetComponent<Stick2>();
 
         stickScript.DropStick();
     }
