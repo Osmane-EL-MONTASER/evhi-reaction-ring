@@ -28,7 +28,8 @@ public class StickManager1 : MonoBehaviour
         int nbChildren = transform.childCount; // On récupère le nombre d'enfants de l'empty "Stick Manager"
         for (int i = 0; i < nbChildren; i++)
         {
-            GameObject stick = transform.GetChild(i).gameObject;
+            GameObject stickParent = transform.GetChild(i).gameObject;
+            GameObject stick = stickParent.transform.GetChild(0).gameObject;
             Stick2 stickScript = stick.GetComponent<Stick2>();
 
             stickScript.SetStickLength(baseStickLength);
@@ -99,7 +100,9 @@ public class StickManager1 : MonoBehaviour
         int nbChildren = transform.childCount; // On récupère le nombre d'enfants de l'empty "Stick Manager"
         int randomIndex = Random.Range(0, nbChildren); // On récupère un nombre aléatoire entre 0 et le nombre d'enfants
 
-        GameObject stick = transform.GetChild(randomIndex).gameObject;
+        GameObject stickParent = transform.GetChild(randomIndex).gameObject;
+        //get child object
+        GameObject stick = stickParent.transform.GetChild(0).gameObject;
         Stick2 stickScript = stick.GetComponent<Stick2>();
 
         stickScript.DropStick();

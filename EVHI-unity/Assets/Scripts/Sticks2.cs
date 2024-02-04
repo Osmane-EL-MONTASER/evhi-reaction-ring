@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Stick2 : MonoBehaviour {
-    //Set stick initial position
-    private Vector3 initialPosition;
 
     private PerformanceManager performanceManagerScript;
 
@@ -25,7 +23,6 @@ public class Stick2 : MonoBehaviour {
 
     // Start is called before the first frame update
     void Start() {
-        initialPosition = transform.position;
         scoreManager = GameObject.Find("Score Manager");
         perfManager = GameObject.Find("Performance Manager");
     }
@@ -34,13 +31,7 @@ public class Stick2 : MonoBehaviour {
     void Update() {
         if (Time.time > respawnTime && needRespawn)
         {
-            Rigidbody rb = GetComponent<Rigidbody>();
-            rb.velocity = Vector3.zero;
-            transform.position = initialPosition;
-            needRespawn = false;
-            isFalling = false;
-            isGrabbed = false;
-            //Debug.Log("Respawn");
+            ResetStick();
         }
     }
 
@@ -48,7 +39,7 @@ public class Stick2 : MonoBehaviour {
     {
         Rigidbody rb = GetComponent<Rigidbody>();
         rb.velocity = Vector3.zero;
-        transform.position = initialPosition;
+        transform.localPosition = new Vector3(0, -1, 0);
         needRespawn = false;
         isFalling = false;
         isGrabbed = false;
@@ -81,6 +72,7 @@ public class Stick2 : MonoBehaviour {
             respawnTime = respawnTimer + Time.time;
             needRespawn = true;
         }
+        //SetStickLength(2.0f); //test size change when grabbed
     }
 
     /// <summary>
@@ -91,7 +83,7 @@ public class Stick2 : MonoBehaviour {
     /// This function is called by the Stick Manager.
     /// </remarks>
     public void DropStick() {
-        //Debug.Log("DropStick");
+        Debug.Log("DropStick");
         // On récupère le rigidbody du stick
         Rigidbody rb = GetComponent<Rigidbody>();
         // On active le rigidbody
@@ -108,15 +100,15 @@ public class Stick2 : MonoBehaviour {
     /// </summary>
     public void SetStickLength(float length) {
         Transform stickTransform = GetComponent<Transform>();
-        Vector3 scale = stickTransform.localScale;
+        //Get parent transform
+        Transform parentTransform = stickTransform.parent;
+
+        Vector3 scale = parentTransform.localScale;
         
         // On modifie le scale du stick
-        scale.z = length;
+        scale.y = length;
         // On applique le nouveau scale au stick
-        stickTransform.localScale = scale;
-
-        // Add the length difference with a base scale 1.0f to the stick's Y position
-        stickTransform.position -= new Vector3(0.0f, (length - 1.0f) / 2.0f, 0.0f);
+        parentTransform.localScale = scale;
     }
 
     public void SetStickSpeed(float speed) {
