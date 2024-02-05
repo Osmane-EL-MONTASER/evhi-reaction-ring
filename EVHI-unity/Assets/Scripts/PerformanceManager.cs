@@ -5,8 +5,8 @@ using UnityEngine.InputSystem;
 
 public class PerformanceManager : MonoBehaviour
 {
-    public Transform leftHandPos;
-    public Transform rightHandPos;
+    public GameObject leftHand;
+    public GameObject rightHand;
     public InputActionProperty leftHandGrip;
     public InputActionProperty rightHandGrip;
 
@@ -26,35 +26,52 @@ public class PerformanceManager : MonoBehaviour
     void Update()
     {
         if (leftHandGrip.action.triggered || rightHandGrip.action.triggered){
-            Vector3 handPos = leftHandPos.position;
+            Vector3 handPos = new Vector3();
+            Vector3 centerPos = new Vector3();
+
+            if (leftHandGrip.action.triggered){
+                handPos = leftHand.transform.position;
+                centerPos = leftHand.GetComponent<SphereCollider>().center;
+            } else {
+                handPos = rightHand.transform.position;
+                centerPos = rightHand.GetComponent<SphereCollider>().center;
+            }
+
+            handPos = handPos+centerPos;   // centrer par rapport au collider
+
             for (int i = 0; i < stickList.Count; i++){
                 Stick2 s = stickList[i].stick;
-                Transform t = s.transform;
+                Vector3 stick_pos = s.transform.position;   // position du stick
+                Vector3 base_scale = s.transform.parent.transform.parent.transform.localScale;     // scale du stick de base
+                Vector3 stick_scale = s.transform.parent.transform.localScale;
+                stick_scale = new Vector3(stick_scale.x*base_scale.x, stick_scale.y*base_scale.y, stick_scale.z*base_scale.z); // mise à l'echelle du scale du stick
+                
                 float xdist = 0;
                 float ydist = 0;
                 float zdist = 0;
 
-                if (t.position.x + 2*t.localScale.x > handPos.x){
-                    xdist = t.position.x - handPos.x;
-                } else if (t.position.x - 2*t.localScale.x < handPos.x){
-                    xdist = handPos.x - t.position.x;
+                if (stick_pos.x + stick_scale.x > handPos.x){
+                    xdist = stick_pos.x + stick_scale.x - handPos.x;
+                } else if (stick_pos.x - stick_scale.x < handPos.x){
+                    xdist = handPos.x - stick_pos.x - stick_scale.x;
                 }
 
-                if (t.position.y + 2*t.localScale.y > handPos.y){
-                    ydist = t.position.y - handPos.y;
-                } else if (t.position.y - 2*t.localScale.y < handPos.y){
-                    ydist = handPos.y - t.position.y;
+                if (stick_pos.y + stick_scale.y > handPos.y){
+                    ydist = stick_pos.y + stick_scale.y - handPos.y;
+                } else if (stick_pos.y - stick_scale.y < handPos.y){
+                    ydist = handPos.y - stick_pos.y - stick_scale.y;
                 }
 
-                if (t.position.z + 2*t.localScale.z > handPos.z){
-                    zdist = t.position.z - handPos.z;
-                } else if (t.position.z - 2*t.localScale.z < handPos.z){
-                    zdist = handPos.z - t.position.z;
+                if (stick_pos.z + stick_scale.z > handPos.z){
+                    zdist = stick_pos.z + stick_scale.z - handPos.z;
+                } else if (stick_pos.z - stick_scale.z < handPos.z){
+                    zdist = handPos.z - stick_pos.z - stick_scale.z;
                 }
 
                 float dist = Mathf.Sqrt(xdist*xdist + ydist*ydist + zdist*zdist);
 
-                if (dist <= 3f && dist < stickList[i].last_dist){
+                // si la sélection est plus proche que la précédente, mettre à jour
+                if (dist <= 0.2f && dist < stickList[i].last_dist){
                     stickList[i] = (s, dist, s.getFallTime() - Time.time);
                 }
             }
