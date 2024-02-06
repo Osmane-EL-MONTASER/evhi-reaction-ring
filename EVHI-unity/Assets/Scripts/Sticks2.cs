@@ -68,7 +68,6 @@ public class Stick2 : MonoBehaviour {
             isGrabbed = true;
             scoreManager.GetComponent<ScoreManager>().AddScore(1);
             transform.position = new Vector3(-5,-5,-5);
-            perfManager.GetComponent<PerformanceManager>().addPerfList(this);
             respawnTime = respawnTimer + Time.time;
             needRespawn = true;
         }
