@@ -33,7 +33,10 @@ public class ScoreManager : MonoBehaviour
     private Thread listenerThread;
     private bool isRunning = true;
 
-    public List<(float dist, float time)> perfList = new List<(float dist, float time)>();
+    public List<float> perfList = new List<float>();
+
+    public bool algoHasStarted = false;
+    public bool algoIsRunning = false;
 
     // Start is called before the first frame update
     void Start()
@@ -42,7 +45,6 @@ public class ScoreManager : MonoBehaviour
         server = new TcpListener(IPAddress.Parse("127.0.0.1"), 5000);
         server.Start();
         Debug.Log("Server started on localhost:5000");
-
         listenerThread = new Thread(new ThreadStart(ListenForClients));
         listenerThread.Start();
     }
@@ -110,8 +112,8 @@ public class ScoreManager : MonoBehaviour
             lock ("performances") {
                 Debug.Log("PerfList: " + perfList.Count);
 
-                foreach ((float dist, float time) in perfList){
-                    Debug.Log("Dist: " + dist + " Time: " + time);
+                foreach (float dist in perfList){
+                    Debug.Log("dist" + dist);
                 }
             }
 

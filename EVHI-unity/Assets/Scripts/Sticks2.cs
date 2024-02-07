@@ -24,6 +24,8 @@ public class Stick2 : MonoBehaviour {
     public float distleft;
     public float distright;
 
+    public int stickId;
+
     // Start is called before the first frame update
     void Start() {
         scoreManager = GameObject.Find("Score Manager");
@@ -60,7 +62,7 @@ public class Stick2 : MonoBehaviour {
             needRespawn = true;
             if (!isGrabbed){
                 scoreManager.GetComponent<ScoreManager>().AddFailed(1);
-                perfManager.GetComponent<PerformanceManager>().addPerfList(returnMinDist());
+                perfManager.GetComponent<PerformanceManager>().addPerfList(returnMinDist(),stickId);
             }
         }
     }
