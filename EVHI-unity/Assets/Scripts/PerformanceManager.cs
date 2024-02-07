@@ -40,6 +40,9 @@ public class PerformanceManager : MonoBehaviour
 
     public GameObject scoreManager;
 
+    public GameObject leftRayInteractor;
+    public GameObject rightRayInteractor;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -113,6 +116,7 @@ public class PerformanceManager : MonoBehaviour
         else if(perfType == "exp")
         {
             perf = getPerfExp(dist);
+            Debug.Log("perf : " + perf);
         }
         listPerf.Add(perf);
         stickOrder.Add(index);
@@ -176,6 +180,18 @@ public class PerformanceManager : MonoBehaviour
         {
             listPerf = new List<float>();
             stickOrder = new List<int>();
+            rightRayInteractor.SetActive(true);
+            leftRayInteractor.SetActive(true);
+        }
+        else if(gameState == GameState.Start)
+        {
+            rightRayInteractor.SetActive(true);
+            leftRayInteractor.SetActive(true);
+        }
+        else if(gameState == GameState.Playing)
+        {
+            rightRayInteractor.SetActive(false);
+            leftRayInteractor.SetActive(false);
         }
     }
 
@@ -188,6 +204,6 @@ public class PerformanceManager : MonoBehaviour
 
     public void startGame()
     {
-        gameState = GameState.Playing;
+        setGameState(GameState.Playing);
     }
 }

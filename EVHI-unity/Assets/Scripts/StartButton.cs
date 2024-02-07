@@ -27,7 +27,7 @@ public class StartButton : MonoBehaviour
         if (!isPressed && performanceManagerScript.gameState == GameState.Start)
         {
             //move button down to 0.003f of its current position
-            button.transform.localPosition = button.transform.localPosition + new Vector3(0, -0.003f, 0);
+            button.transform.position = button.transform.position + new Vector3(0, -0.01f, 0);
             presser = other.gameObject;
             onPress.Invoke();
             isPressed = true;
@@ -39,7 +39,7 @@ public class StartButton : MonoBehaviour
     {
         if (other.gameObject == presser && isPressed)
         {
-            button.transform.localPosition = button.transform.localPosition + new Vector3(0, 0.003f, 0);
+            button.transform.position = button.transform.position + new Vector3(0, 0.01f, 0);
             onRelease.Invoke();
             sound.Play();
             isPressed = false;
