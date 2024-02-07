@@ -113,6 +113,7 @@ public class PerformanceManager : MonoBehaviour
         return Mathf.Exp(-Mathf.Pow(dist/perfAlpha,perfBeta));
     }
 
+    // Get average performance value for the game
     public float getPerformanceGame()
     {
         float totalPerf = 0;
@@ -120,7 +121,7 @@ public class PerformanceManager : MonoBehaviour
         {
             totalPerf += perf;
         }
-        return totalPerf;
+        return totalPerf/listPerf.Count;
     }
 
     public GameState getGameState()
@@ -131,5 +132,17 @@ public class PerformanceManager : MonoBehaviour
     public void setGameState(GameState state)
     {
         gameState = state;
+    }
+
+    public void setPerformance(string type,float perfAlpha, float perfBeta)
+    {
+        perfType = type;
+        this.perfAlpha = perfAlpha;
+        this.perfBeta = perfBeta;
+    }
+
+    public void startGame()
+    {
+        gameState = GameState.Playing;
     }
 }

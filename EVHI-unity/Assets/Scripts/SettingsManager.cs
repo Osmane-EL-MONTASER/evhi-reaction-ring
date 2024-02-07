@@ -28,12 +28,17 @@ public class SettingsManager : MonoBehaviour
     public int additionalpoints = 5;
     public GameObject perfGraph;
     private WindowGraph windowGraph;
+
+    public GameObject performanceManager;
+    private PerformanceManager performanceManagerScript;
+
     // Start is called before the first frame update
     void Start()
     {
         windowGraph = perfGraph.GetComponent<WindowGraph>();
         perfAlphaText = perfAlphaGo.GetComponent<TMP_Text>();
         perfBetaText = perfBetaGo.GetComponent<TMP_Text>();
+        performanceManagerScript = performanceManager.GetComponent<PerformanceManager>();
         onPerfSettingsUpdate();
     }
 
@@ -106,6 +111,7 @@ public class SettingsManager : MonoBehaviour
         }
         windowGraph.ClearGraph();
         windowGraph.ShowGraph(valueList);
+        performanceManagerScript.setPerformance(linToggle.isOn ? "lin" : "exp", perfAlphaValue.value, perfBetaValue.value);
     }
 
     public void resetDefaultValues()

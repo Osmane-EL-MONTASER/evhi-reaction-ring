@@ -76,6 +76,7 @@
     <Compile Include="Assets\Scripts\SettingsManager.cs" />
     <Compile Include="Assets\Scripts\Stick.cs" />
     <Compile Include="Assets\Scripts\StickManager.cs" />
+    <Compile Include="Assets\StartButton.cs" />
     <Compile Include="Assets\VRTemplateAssets\Scripts\BezierCurve.cs" />
     <Compile Include="Assets\Scripts\HandManager.cs" />
     <Compile Include="Assets\VRTemplateAssets\Scripts\LaunchProjectile.cs" />
