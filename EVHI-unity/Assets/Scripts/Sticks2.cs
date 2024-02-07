@@ -90,11 +90,17 @@ public class Stick2 : MonoBehaviour {
     /// This function is called by the Stick Manager.
     /// </remarks>
     public void DropStick() {
-        Debug.Log("DropStick");
         // On récupère le rigidbody du stick
         Rigidbody rb = GetComponent<Rigidbody>();
         // On active le rigidbody
         rb.isKinematic = false;
+
+        if (!isFalling) 
+        {
+            AudioSource audioData = GetComponent<AudioSource>();
+            audioData.Play(0);  
+        }
+
         // On applique une force au stick pour le faire tomber
         rb.AddForce(Vector3.down * (stickSpeed * 6));
         isFalling = true;
