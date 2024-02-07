@@ -35,6 +35,8 @@ public class ScoreManager : MonoBehaviour
 
     public List<(float dist, float time)> perfList = new List<(float dist, float time)>();
 
+    public bool isAlgoFinished = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -83,16 +85,10 @@ public class ScoreManager : MonoBehaviour
                            .Select(str => double.Parse(str, CultureInfo.InvariantCulture))
                            .ToArray();
 
-                Debug.Log("Numbers: " + numbers.Length);
-                foreach (var number in numbers)
-                {
-                    Debug.Log("Number: " + number);
-                }
-
                 // Grouper les nombres par trois et ajouter les vitesses et les longueurs à la liste
                 for (int inc = 0; inc < numbers.Length; inc += 2)
                 {
-                    StickWidth.Add((float)numbers[inc]);
+                    StickSpeeds.Add((float)numbers[inc]);
                     StickLength.Add((float)numbers[inc + 1]);
                 }
 

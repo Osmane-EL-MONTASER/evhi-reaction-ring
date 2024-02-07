@@ -56,11 +56,18 @@ public class StickManager1 : MonoBehaviour
                 int nbChildren = transform.childCount; // On récupère le nombre d'enfants de l'empty "Stick Manager"
                 for (int i = 0; i < nbChildren; i++)
                 {
-                    GameObject stick = transform.GetChild(i).gameObject;
+                    GameObject stick = transform.GetChild(i).GetChild(0).gameObject;
                     Stick2 stickScript = stick.GetComponent<Stick2>();
-
+                    Debug.Log(i + "::" + ScoreManager.GetComponent<ScoreManager>().StickSpeeds);
+                    foreach (var speed in ScoreManager.GetComponent<ScoreManager>().StickSpeeds)
+                    {
+                        Debug.Log("Speed : " + speed);
+                        
+                    }
+                    Debug.Log(stickScript);
+                    Debug.Log(ScoreManager.GetComponent<ScoreManager>().StickSpeeds[i]);
                     stickScript.SetStickSpeed(ScoreManager.GetComponent<ScoreManager>().StickSpeeds[i]);
-                    Debug.Log(ScoreManager.GetComponent<ScoreManager>().StickLength);
+                    Debug.Log("SET STICK LENGTH : " + ScoreManager.GetComponent<ScoreManager>().StickLength);
                     stickScript.SetStickLength(ScoreManager.GetComponent<ScoreManager>().StickLength[i]);
                 }
 
