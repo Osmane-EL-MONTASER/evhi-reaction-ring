@@ -7,6 +7,9 @@ using System.Threading;
 using System.Text;
 using System.Net;
 using System.Globalization;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 public class ScoreManager : MonoBehaviour
 {
@@ -17,7 +20,8 @@ public class ScoreManager : MonoBehaviour
 
     public List<float> performances = new List<float>();
     public List<float> StickSpeeds = new List<float>();
-
+    public List<float> StickWidth = new List<float>();
+    public List<float> StickLength = new List<float>();
     public bool IsStickSpeedsReady = false;
 
     public TMPro.TextMeshProUGUI scoreText;
@@ -28,6 +32,8 @@ public class ScoreManager : MonoBehaviour
     private TcpListener server;
     private Thread listenerThread;
     private bool isRunning = true;
+
+    public List<(float dist, float time)> perfList = new List<(float dist, float time)>();
 
     // Start is called before the first frame update
     void Start()
@@ -71,7 +77,25 @@ public class ScoreManager : MonoBehaviour
             // Parse the data and return the speeds
             lock ("lockStats")
             {
-                StickSpeeds = ParseAndReturnSpeeds(data);
+                //StickSpeeds = ParseAndReturnSpeeds(data);
+                var numbers = data.Trim(new char[] { ' ', '[', ']' })
+                           .Split(new char[] { ' ', '\n' }, StringSplitOptions.RemoveEmptyEntries)
+                           .Select(str => double.Parse(str, CultureInfo.InvariantCulture))
+                           .ToArray();
+
+                Debug.Log("Numbers: " + numbers.Length);
+                foreach (var number in numbers)
+                {
+                    Debug.Log("Number: " + number);
+                }
+
+                // Grouper les nombres par trois et ajouter les vitesses et les longueurs à la liste
+                for (int inc = 0; inc < numbers.Length; inc += 2)
+                {
+                    StickWidth.Add((float)numbers[inc]);
+                    StickLength.Add((float)numbers[inc + 1]);
+                }
+
                 IsStickSpeedsReady = true;
             }
             
@@ -81,6 +105,14 @@ public class ScoreManager : MonoBehaviour
             while (currentScore + failed < 10)
             {
                 // Wait for the score to be 10
+            }
+
+            lock ("performances") {
+                Debug.Log("PerfList: " + perfList.Count);
+
+                foreach ((float dist, float time) in perfList){
+                    Debug.Log("Dist: " + dist + " Time: " + time);
+                }
             }
 
             string performances_string = "[ ";

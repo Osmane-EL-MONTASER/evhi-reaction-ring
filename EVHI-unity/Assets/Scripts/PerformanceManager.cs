@@ -16,6 +16,8 @@ public class PerformanceManager : MonoBehaviour
 
     private List<(float dist, float time)> perfList = new List<(float dist, float time)>();
 
+    public GameObject scoreManager;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -142,7 +144,8 @@ public class PerformanceManager : MonoBehaviour
     public float get_Perf(){
         stickList.Clear();
         perfList.Clear();
-        
+
+        return 0;
     }
 
     public void addFallingStick(Stick2 stick){
@@ -156,6 +159,9 @@ public class PerformanceManager : MonoBehaviour
                 Stick2 s = stickList[i].stick;
                 perfList.Add((stickList[i].last_dist, stickList[i].time));
                 stickList.RemoveAt(i);
+                lock("performances") {
+                    scoreManager.GetComponent<ScoreManager>().perfList = perfList;
+                }
                 return;
             }
         }

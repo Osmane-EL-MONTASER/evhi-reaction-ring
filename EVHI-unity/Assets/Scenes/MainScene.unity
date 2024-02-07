@@ -1354,7 +1354,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3412649390972202448, guid: 895f6f3c2d334633b5800312285058d2, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3415145736139425353, guid: 895f6f3c2d334633b5800312285058d2, type: 3}
       propertyPath: m_IsActive
@@ -1430,7 +1430,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6733349667411237925, guid: 895f6f3c2d334633b5800312285058d2, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7212809983350181570, guid: 895f6f3c2d334633b5800312285058d2, type: 3}
       propertyPath: m_AimTargetObject
@@ -1442,7 +1442,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7313654230448209575, guid: 895f6f3c2d334633b5800312285058d2, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7696548424635294051, guid: 895f6f3c2d334633b5800312285058d2, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1450,7 +1450,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7696548424635294051, guid: 895f6f3c2d334633b5800312285058d2, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 2.93
+      value: 2.125
       objectReference: {fileID: 0}
     - target: {fileID: 7696548424635294051, guid: 895f6f3c2d334633b5800312285058d2, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1947,7 +1947,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4592956391713993908, guid: 65eb6b98091a5734ba9d9ca871cef69a, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7179462289238023466, guid: 65eb6b98091a5734ba9d9ca871cef69a, type: 3}
       propertyPath: m_RootOrder
@@ -4274,6 +4274,8 @@ MonoBehaviour:
   isFirstLaunch: 1
   performances: []
   StickSpeeds: []
+  StickWidth: []
+  StickLength: []
   IsStickSpeedsReady: 0
   scoreText: {fileID: 7081840893009087835}
   failedText: {fileID: 9125794425331195112}
@@ -4911,8 +4913,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a9db48acc4508e47a5ddc19a1a99f7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  leftHandPos: {fileID: 0}
-  rightHandPos: {fileID: 0}
+  leftHand: {fileID: 0}
+  rightHand: {fileID: 0}
   leftHandGrip:
     m_UseReference: 0
     m_Action:
@@ -4925,6 +4927,19 @@ MonoBehaviour:
       m_SingletonActionBindings: []
       m_Flags: 0
     m_Reference: {fileID: 0}
+  rightHandGrip:
+    m_UseReference: 0
+    m_Action:
+      m_Name: Right Hand Grip
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: 0148c063-528d-40bb-82c2-5334e6b193b2
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    m_Reference: {fileID: 0}
+  scoreManager: {fileID: 1469210285}
 --- !u!4 &2116233257
 Transform:
   m_ObjectHideFlags: 0
