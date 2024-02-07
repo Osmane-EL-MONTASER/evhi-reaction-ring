@@ -6,10 +6,16 @@ import numpy as np
 import socket
 
 # Paramètres pour la simulation
-borne_min_length, borne_max_length = 0.01, 1  # Exemple de plages pour la longueur
-borne_min_speed, borne_max_speed = 0.5, 1.5   # Plage pour la vitesse
 target_performance = 85  # Performance cible
 scale = 20  # Échelle pour la fonction de récompense
+
+NB_STICKS = 10
+NB_PARAMS = 2
+
+# Vitesses possibles pour les bâtons
+possibleSpeeds = [1, 2, 4, 6, 8, 12, 16, 24, 32, 48, 64]
+# Longueurs possibles pour les bâtons
+possibleLengths = [0.1, 0.2, 0.4, 0.6, 0.8, 1.2, 1.6]
 
 class CustomStickEnv(gym.Env):
     metadata = {'render.modes': ['human']}
@@ -19,19 +25,17 @@ class CustomStickEnv(gym.Env):
 
         # Définition des plages d'action pour length, width, speed
         
-        # Instead of defining the action space for one stick, we will define it for 10 sticks. 10x[borne_min_length, borne_min_width, borne_min_speed]
+        # Instead of defining the action space for one stick, we will define it for 10 sticks with speed and length.
         
-        self.action_space = spaces.Box(low=np.array([borne_min_length, borne_min_speed]*10), 
-                                       high=np.array([borne_max_length, borne_max_speed]*10), 
-                                       dtype=np.float32)
+        self.action_space = spaces.MultiDiscrete([len(possibleSpeeds)]* NB_STICKS + [len(possibleLengths)] * NB_STICKS)
 
         """self.action_space = spaces.Box(low=np.array([borne_min_speed] * 10), 
                                        high=np.array([borne_max_speed] * 10), 
                                        dtype=np.float32)"""
 
-        # On suppose que l'observation est la performance actuelle du joueur et les paramètres length, width, speed
-        self.observation_space = spaces.Box(low=np.array([0.0]*10+ [borne_min_length, borne_min_speed] * 10,), 
-                                            high=np.array([100.0]*10 + [borne_max_length, borne_max_speed] * 10), 
+        # On suppose que l'observation est la performance actuelle du joueur et les paramètres length, speed
+        self.observation_space = spaces.Box(low=np.array([0.0]*10), 
+                                            high=np.array([100.0]*10), 
                                             dtype=np.float32)
         
         # We need to establish a connection with the game and send the action.
@@ -52,7 +56,15 @@ class CustomStickEnv(gym.Env):
         #performance = simulate_performance(action[0], action[1], action[2]) for debugging purpose
         
         # Send the action to the game as a string
+        #print(f'Sending Action: {action}')
+        
+        # Convert the action to the corresponding speed and length
+        speed = [possibleSpeeds[i] for i in action[:NB_STICKS]]
+        length = [possibleLengths[i] for i in action[NB_STICKS:]]
+        
+        action = speed + length
         print(f'Sending Action: {action}')
+        
         self.s.sendall(str(action).encode())
         
         # Receive the performance from the game
@@ -94,7 +106,7 @@ class CustomStickEnv(gym.Env):
     def reset(self, seed=None, options=None):
         # Réinitialiser l'état de l'environnement pour un nouvel épisode
         initial_performance = 0.85 # On suppose que le joueur commence avec une performance de 85%
-        return np.array([initial_performance] * 10 + [0.1, 1] * 10).astype(np.float32), None
+        return np.array([initial_performance] * 10).astype(np.float32), None
 
     def render(self, mode='console'):
         if mode != 'console':

@@ -1,20 +1,25 @@
-from stable_baselines3.droQ.droQ import DroQ
+#from stable_baselines3.droQ.droQ import DroQ
+
+from stable_baselines3 import PPO
+
 from stick_env import CustomStickEnv
+from stable_baselines3.common.callbacks import CheckpointCallback
 
 # Créez l'environnement Gym
 env = CustomStickEnv(target_performance=85)
 
-# Load the trained agent
-"""model = DroQ.load("F:/Documents/Master S2/Projets Unity/EVHI TP/evhi-reaction-ring/EVHI-unity/Assets/Scripts/model/droq_0")
-model.set_env(env)
+checkpoint_callback = CheckpointCallback(
+  save_freq=1,
+  save_path="./logs/",
+  name_prefix="rl_model",
+  save_replay_buffer=True,
+  save_vecnormalize=True,
+)
 
-# Set the parameters of the model
-model.gradient_steps = 250
-model.learning_starts = 0"""
+# Load the last model trained
+model = PPO.load("./logs/rl_model_5_steps", env=env)
 
-model = DroQ("MlpPolicy", env, verbose=1, learning_rate=0.03, gradient_steps=100, dropout_rate=0.01)
-c
+#model = PPO("MlpPolicy", env, verbose=1)
+
 # Train the agent and save it each episode
-for i in range(100):
-    model.learn(total_timesteps=150, log_interval=10)
-    #model.save(f"F:/Documents/Master S2/EVHI/model/droq_0")
+model.learn(total_timesteps=150000, log_interval=10, callback=checkpoint_callback)

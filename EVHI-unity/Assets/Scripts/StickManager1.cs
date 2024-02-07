@@ -21,6 +21,11 @@ public class StickManager1 : MonoBehaviour
 
     public TMPro.TextMeshProUGUI gameStatusText;
 
+    public TMPro.TextMeshProUGUI scoreText;
+    public TMPro.TextMeshProUGUI failedText;
+
+    public TMPro.TextMeshProUGUI stickLeftText;
+
     private GameState gameState;
 
     // Start is called before the first frame update
@@ -49,6 +54,7 @@ public class StickManager1 : MonoBehaviour
             if (ScoreManager.GetComponent<ScoreManager>().IsStickSpeedsReady)
             {
                 gameStatusText.text = "Jeu en cours... Attrapez les bâtons avec les manettes dès qu'ils tombent !";
+                stickLeftText.text = "Bâtons restants : 0 / 10. Bon courage !"; 
                 ScoreManager.GetComponent<ScoreManager>().IsStickSpeedsReady = false;
                 ScoreManager.GetComponent<ScoreManager>().isFirstLaunch = false;
 
@@ -75,6 +81,9 @@ public class StickManager1 : MonoBehaviour
             else
             {
                 gameStatusText.text = "Round terminé ! Envoi des données de jeu...";
+                scoreText.text = "0";
+                failedText.text = "0";
+                stickLeftText.text = "Plus de bâtons ! Appuyez sur le bouton pour rejouer..."; 
                 //Debug.Log("Waiting for the next stick speeds...");
             }
         }

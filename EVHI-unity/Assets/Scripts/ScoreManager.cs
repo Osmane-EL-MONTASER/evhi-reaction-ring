@@ -84,17 +84,27 @@ public class ScoreManager : MonoBehaviour
             // Parse the data and return the speeds
             lock ("lockStats")
             {
-                //StickSpeeds = ParseAndReturnSpeeds(data);
-                var numbers = data.Trim(new char[] { ' ', '[', ']' })
-                           .Split(new char[] { ' ', '\n' }, StringSplitOptions.RemoveEmptyEntries)
-                           .Select(str => double.Parse(str, CultureInfo.InvariantCulture))
-                           .ToArray();
+                // Suppression des crochets de début et de fin
+                string trimmedInput = data.Trim(new char[] { '[', ']' });
+
+                // Division de la chaîne en éléments basés sur la virgule
+                string[] stringNumbers = trimmedInput.Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
+
+                // Conversion de chaque élément en float et ajout dans une liste
+                List<float> numbers = new List<float>();
+                foreach (string number in stringNumbers)
+                {
+                    // Utilisation de CultureInfo.InvariantCulture pour gérer correctement les nombres décimaux
+                    numbers.Add(float.Parse(number, CultureInfo.InvariantCulture));
+                }
+                StickSpeeds.Clear();
+                StickLength.Clear();
 
                 // Grouper les nombres par trois et ajouter les vitesses et les longueurs à la liste
-                for (int inc = 0; inc < numbers.Length; inc += 2)
+                for (int inc = 0; inc < 10; inc += 1)
                 {
                     StickSpeeds.Add((float)numbers[inc]);
-                    StickLength.Add((float)numbers[inc + 1]);
+                    StickLength.Add((float)numbers[inc + 10]);
                 }
 
                 IsStickSpeedsReady = true;
