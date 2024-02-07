@@ -20,6 +20,7 @@ public class PerformanceManager : MonoBehaviour
     public InputActionProperty rightHandGrip;
 
     public List<float> listPerf = new List<float>();
+    public List<int> stickOrder = new List<int>();
     public List<GameObject> listSticks = new List<GameObject>();
 
     public int stickAmount = 10;
@@ -56,7 +57,6 @@ public class PerformanceManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         float pressedLeft;
         float pressedRight;
         //read the grip button of the controllers
@@ -67,6 +67,20 @@ public class PerformanceManager : MonoBehaviour
             updateFallingStickValues(true);
         if (pressedRight == 1)
             updateFallingStickValues(false);
+
+        if (gameState == GameState.End)
+        {
+            if(scoreManager.GetComponent<ScoreManager>().algoHasStarted == true)
+            {
+                bool hasFinished;
+                lock ("performances")
+                {
+                    hasFinished = scoreManager.GetComponent<ScoreManager>().algoIsRunning;
+                }
+                if (hasFinished == true)
+                    setGameState(GameState.Start);
+            }
+        }
     }
 
     public void updateFallingStickValues(bool isLeftHand)
@@ -84,7 +98,7 @@ public class PerformanceManager : MonoBehaviour
         }
     }
 
-    public void addPerfList(float dist){
+    public void addPerfList(float dist, int index){
         //choose getperf function depending on perfType
         float perf = 0;
         if(perfType == "lin")
@@ -96,15 +110,33 @@ public class PerformanceManager : MonoBehaviour
             perf = getPerfExp(dist);
         }
         listPerf.Add(perf);
+        stickOrder.Add(index);
         stickFellCount++;
         if (stickFellCount == stickAmount)
         {
             stickFellCount = 0;
             gameState = GameState.End;
-            Debug.Log("Performance for Game:" + getPerformanceGame());
+            lock ("performances")
+            {
+                ScoreManager comp = scoreManager.GetComponent<ScoreManager>();
+                comp.perfList = getAllStickPerf();
+                comp.algoHasStarted = true;
+                comp.algoIsRunning = true;
+                setGameState(GameState.End);
+            }
         }
     }
 
+    public List<float> getAllStickPerf()
+    {
+        List<float> listRes = new List<float>();
+        //for i in index
+        foreach(int i in stickOrder)
+        {
+            listRes.Add(listPerf[i]);
+        }
+        return listRes;
+    }
     // Get performance value with linear function
     public float getPerfLin(float dist)
     {
@@ -136,6 +168,11 @@ public class PerformanceManager : MonoBehaviour
     public void setGameState(GameState state)
     {
         gameState = state;
+        if (gameState == GameState.End)
+        {
+            listPerf = new List<float>();
+            stickOrder = new List<int>();
+        }
     }
 
     public void setPerformance(string type,float perfAlpha, float perfBeta)
