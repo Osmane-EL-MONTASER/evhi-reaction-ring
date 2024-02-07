@@ -21,10 +21,15 @@ public class Stick2 : MonoBehaviour {
 
     private GameObject perfManager;
 
+    public float distleft;
+    public float distright;
+
     // Start is called before the first frame update
     void Start() {
         scoreManager = GameObject.Find("Score Manager");
         perfManager = GameObject.Find("Performance Manager");
+        distleft = Mathf.Infinity;
+        distright = Mathf.Infinity;
     }
 
     // Update is called once per frame
@@ -55,7 +60,7 @@ public class Stick2 : MonoBehaviour {
             needRespawn = true;
             if (!isGrabbed){
                 scoreManager.GetComponent<ScoreManager>().AddFailed(1);
-                perfManager.GetComponent<PerformanceManager>().addPerfList(this);
+                perfManager.GetComponent<PerformanceManager>().addPerfList(returnMinDist());
             }
         }
     }
@@ -91,7 +96,6 @@ public class Stick2 : MonoBehaviour {
         rb.AddForce(Vector3.down * stickSpeed);
         isFalling = true;
         fallTime = Time.time;
-        perfManager.GetComponent<PerformanceManager>().addFallingStick(this);
     }
 
     /// <summary>
@@ -120,5 +124,35 @@ public class Stick2 : MonoBehaviour {
 
     public float getFallTime(){
         return fallTime;
+    }
+
+    public void updateDistOnGrabRight(Vector3 handPosRight)
+    {
+        if (isFalling && !isGrabbed)
+        {
+            //get closest distance from collider to hand
+            Debug.Log(Vector3.Distance(handPosRight, GetComponent<Collider>().ClosestPoint(handPosRight)));
+            distright = Math.Min(distright, Vector3.Distance(handPosRight, GetComponent<Collider>().ClosestPoint(handPosRight)));
+        }
+    }
+
+    public void updateDistOnGrabLeft(Vector3 handPosLeft)
+    {
+        if (isFalling && !isGrabbed)
+        {
+            //get closest distance from collider to hand
+            distleft = Math.Min(distleft, Vector3.Distance(handPosLeft, GetComponent<Collider>().ClosestPoint(handPosLeft)));
+        }
+    }
+
+    /// <summary>
+    /// Return the minimum distance between the stick and the hands we obtained.
+    /// </summary>
+    /// <returns></returns>
+    public float returnMinDist()
+    {
+        if (isGrabbed) //if stick is grabbed return directly 0
+            return 0;
+        return Math.Min(distleft, distright);
     }
 }
