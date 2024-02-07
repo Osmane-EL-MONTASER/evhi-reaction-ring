@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Stick2 : MonoBehaviour {
 
-    private PerformanceManager performanceManagerScript;
+    //private PerformanceManager performanceManagerScript;
 
     public float respawnTimer = 3.0f;
     public float respawnTime;

@@ -37,6 +37,8 @@ public class PerformanceManager : MonoBehaviour
     public ActionBasedController leftHandController;
     public InputHelpers.Button button;
 
+    public GameObject scoreManager;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -54,6 +56,7 @@ public class PerformanceManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         float pressedLeft;
         float pressedRight;
         //read the grip button of the controllers
@@ -66,13 +69,14 @@ public class PerformanceManager : MonoBehaviour
             updateFallingStickValues(false);
     }
 
-    public void updateFallingStickValues(bool isLeftHand) {
+    public void updateFallingStickValues(bool isLeftHand)
+    {
         if (gameState == GameState.Playing)
         {
             foreach (GameObject stick in listSticks)
             {
                 Stick2 s = stick.GetComponent<Stick2>();
-                if(isLeftHand)
+                if (isLeftHand)
                     s.updateDistOnGrabLeft(leftHand.transform.position);
                 else
                     s.updateDistOnGrabRight(rightHand.transform.position);
