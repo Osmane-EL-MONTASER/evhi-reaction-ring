@@ -25,8 +25,8 @@ public class PerformanceManager : MonoBehaviour
     public int stickAmount = 10;
     private int stickFellCount = 0;
 
-    public float perfAlpha;
-    public float perfBeta;
+    public float perfAlpha; //distance
+    public float perfBeta; //exponential factor
 
     public GameState gameState;
     public string perfType;
