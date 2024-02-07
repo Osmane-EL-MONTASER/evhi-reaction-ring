@@ -38,8 +38,6 @@ public class ScoreManager : MonoBehaviour
     public bool algoHasStarted = false;
     public bool algoIsRunning = false;
 
-    public bool isAlgoFinished = false;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -78,6 +76,11 @@ public class ScoreManager : MonoBehaviour
             string data = Encoding.ASCII.GetString(buffer, 0, bytesRead);
             Debug.Log("Received: " + data);
 
+            lock ("performances")
+            {
+                algoIsRunning = false;
+            }
+
             // Parse the data and return the speeds
             lock ("lockStats")
             {
@@ -105,20 +108,32 @@ public class ScoreManager : MonoBehaviour
                 // Wait for the score to be 10
             }
 
+            bool listEmpty = true;
+
+            while (listEmpty)
+            {
+                lock ("performances")
+                {
+                    listEmpty = perfList.Count == 0;
+                }
+
+                Thread.Sleep(100);
+            }
+
             lock ("performances") {
                 Debug.Log("PerfList: " + perfList.Count);
 
                 foreach (float dist in perfList){
-                    Debug.Log("dist" + dist);
+                    Debug.Log("Perf" + dist);
                 }
             }
 
             string performances_string = "[ ";
             int i = 0;
             // Lock the performances list to avoid concurrency issues
-            lock (performances)
+            lock (perfList)
             {
-                foreach (float performance in performances)
+                foreach (float performance in perfList)
                 {
                     performances_string += performance.ToString() + " ";
                     i++;
@@ -138,6 +153,11 @@ public class ScoreManager : MonoBehaviour
             byte[] performances_bytes = Encoding.ASCII.GetBytes(performances_string);
             stream.Write(performances_bytes, 0, performances_bytes.Length);
             Debug.Log("Sent: " + performances_string);
+            lock ("performances")
+            {
+                algoIsRunning = true;
+                algoHasStarted = true;
+            }
             
             currentScore = 0;
             failed = 0;

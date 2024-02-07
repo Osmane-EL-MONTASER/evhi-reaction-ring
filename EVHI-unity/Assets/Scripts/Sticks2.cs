@@ -77,6 +77,7 @@ public class Stick2 : MonoBehaviour {
             transform.position = new Vector3(-5,-5,-5);
             respawnTime = respawnTimer + Time.time;
             needRespawn = true;
+            perfManager.GetComponent<PerformanceManager>().addPerfList(0.0f,stickId);
         }
         //SetStickLength(2.0f); //test size change when grabbed
     }
@@ -95,7 +96,7 @@ public class Stick2 : MonoBehaviour {
         // On active le rigidbody
         rb.isKinematic = false;
         // On applique une force au stick pour le faire tomber
-        rb.AddForce(Vector3.down * stickSpeed);
+        rb.AddForce(Vector3.down * (stickSpeed * 6));
         isFalling = true;
         fallTime = Time.time;
     }
@@ -133,7 +134,6 @@ public class Stick2 : MonoBehaviour {
         if (isFalling && !isGrabbed)
         {
             //get closest distance from collider to hand
-            Debug.Log(Vector3.Distance(handPosRight, GetComponent<Collider>().ClosestPoint(handPosRight)));
             distright = Math.Min(distright, Vector3.Distance(handPosRight, GetComponent<Collider>().ClosestPoint(handPosRight)));
         }
     }

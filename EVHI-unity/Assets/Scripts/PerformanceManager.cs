@@ -32,7 +32,7 @@ public class PerformanceManager : MonoBehaviour
     public GameState gameState;
     public string perfType;
 
-    private GameObject stickManager;
+    public GameObject stickManager;
 
     public ActionBasedController rightHandController;
     public ActionBasedController leftHandController;
@@ -62,7 +62,6 @@ public class PerformanceManager : MonoBehaviour
         //read the grip button of the controllers
         pressedLeft = leftHandGrip.action.ReadValue<float>();
         pressedRight = rightHandGrip.action.ReadValue<float>();
-        
         if (pressedLeft == 1)
             updateFallingStickValues(true);
         if (pressedRight == 1)
@@ -75,10 +74,16 @@ public class PerformanceManager : MonoBehaviour
                 bool hasFinished;
                 lock ("performances")
                 {
-                    hasFinished = scoreManager.GetComponent<ScoreManager>().algoIsRunning;
+                    hasFinished = !scoreManager.GetComponent<ScoreManager>().algoIsRunning;
                 }
                 if (hasFinished == true)
+                {
                     setGameState(GameState.Start);
+                    lock ("performances")
+                    {
+                        scoreManager.GetComponent<ScoreManager>().algoHasStarted = false;
+                    }
+                }
             }
         }
     }
@@ -116,12 +121,11 @@ public class PerformanceManager : MonoBehaviour
         {
             stickFellCount = 0;
             gameState = GameState.End;
+            Debug.Log(getAllStickPerf());
             lock ("performances")
             {
                 ScoreManager comp = scoreManager.GetComponent<ScoreManager>();
                 comp.perfList = getAllStickPerf();
-                comp.algoHasStarted = true;
-                comp.algoIsRunning = true;
                 setGameState(GameState.End);
             }
         }

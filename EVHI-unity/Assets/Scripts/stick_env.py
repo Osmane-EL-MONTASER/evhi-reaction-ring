@@ -6,8 +6,8 @@ import numpy as np
 import socket
 
 # Paramètres pour la simulation
-borne_min_length, borne_max_length = 1, 20  # Exemple de plages pour la longueur
-borne_min_speed, borne_max_speed = 0.5, 20.5   # Plage pour la vitesse
+borne_min_length, borne_max_length = 0.01, 1  # Exemple de plages pour la longueur
+borne_min_speed, borne_max_speed = 0.5, 1.5   # Plage pour la vitesse
 target_performance = 85  # Performance cible
 scale = 20  # Échelle pour la fonction de récompense
 
@@ -94,7 +94,7 @@ class CustomStickEnv(gym.Env):
     def reset(self, seed=None, options=None):
         # Réinitialiser l'état de l'environnement pour un nouvel épisode
         initial_performance = 0.85 # On suppose que le joueur commence avec une performance de 85%
-        return np.array([initial_performance] * 10 + [5, 4] * 10).astype(np.float32), None
+        return np.array([initial_performance] * 10 + [0.1, 1] * 10).astype(np.float32), None
 
     def render(self, mode='console'):
         if mode != 'console':

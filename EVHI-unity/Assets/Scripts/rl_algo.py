@@ -13,7 +13,7 @@ model.gradient_steps = 250
 model.learning_starts = 0"""
 
 model = DroQ("MlpPolicy", env, verbose=1, learning_rate=0.03, gradient_steps=100, dropout_rate=0.01)
-
+c
 # Train the agent and save it each episode
 for i in range(100):
     model.learn(total_timesteps=150, log_interval=10)
