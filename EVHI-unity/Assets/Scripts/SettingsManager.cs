@@ -118,8 +118,8 @@ public class SettingsManager : MonoBehaviour
     {
         expToggle.isOn = true;
         linToggle.isOn = false;
-        perfAlphaValue.value = 0.5f;
-        perfBetaValue.value = 3;
+        perfAlphaValue.value = 0.1f;
+        perfBetaValue.value = 2.5f;
         onPerfSettingsUpdate();
     }
 }

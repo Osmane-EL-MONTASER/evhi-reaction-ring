@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Experimental.GlobalIllumination;
 using UnityEngine.InputSystem;
 using UnityEngine.XR.Interaction.Toolkit;
 
@@ -43,6 +44,9 @@ public class PerformanceManager : MonoBehaviour
     public GameObject leftRayInteractor;
     public GameObject rightRayInteractor;
 
+    public GameObject testStick;
+    public GameObject testText;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -65,11 +69,15 @@ public class PerformanceManager : MonoBehaviour
         //read the grip button of the controllers
         pressedLeft = leftHandGrip.action.ReadValue<float>();
         pressedRight = rightHandGrip.action.ReadValue<float>();
-        if (pressedLeft == 1)
+        if (pressedLeft == 1 && gameState == GameState.Playing)
             updateFallingStickValues(true);
-        if (pressedRight == 1)
+        if (pressedRight == 1 && gameState == GameState.Playing)
             updateFallingStickValues(false);
-
+        
+        if (pressedLeft == 1 && gameState != GameState.Playing)
+            getPerfForTestStick(true);
+        if (pressedRight == 1 && gameState != GameState.Playing)
+            getPerfForTestStick(false);
         if (gameState == GameState.End)
         {
             if(scoreManager.GetComponent<ScoreManager>().algoHasStarted == true)
@@ -93,19 +101,34 @@ public class PerformanceManager : MonoBehaviour
 
     public void updateFallingStickValues(bool isLeftHand)
     {
-        if (gameState == GameState.Playing)
+        foreach (GameObject stick in listSticks)
         {
-            foreach (GameObject stick in listSticks)
-            {
-                Stick2 s = stick.GetComponent<Stick2>();
-                if (isLeftHand)
-                    s.updateDistOnGrabLeft(leftHand.transform.position);
-                else
-                    s.updateDistOnGrabRight(rightHand.transform.position);
-            }
+            Stick2 s = stick.GetComponent<Stick2>();
+            if (isLeftHand)
+                s.updateDistOnGrabLeft(leftHand.transform.position);
+            else
+                s.updateDistOnGrabRight(rightHand.transform.position);
         }
     }
 
+    public void getPerfForTestStick(bool isLeftHand)
+    {
+        float dist;
+        if (isLeftHand)
+            dist = Vector3.Distance(leftHand.transform.position, testStick.GetComponent<Collider>().ClosestPoint(leftHand.transform.position));
+        else
+            dist = Vector3.Distance(rightHand.transform.position, testStick.GetComponent<Collider>().ClosestPoint(rightHand.transform.position));
+        float perf = 0;
+        if(perfType == "lin")
+        {
+            perf = getPerfLin(dist);
+        }
+        else if(perfType == "exp")
+        {
+            perf = getPerfExp(dist);
+        }
+        testText.GetComponent<TMPro.TextMeshProUGUI>().text = perf.ToString();
+    }
     public void addPerfList(float dist, int index){
         //choose getperf function depending on perfType
         float perf = 0;

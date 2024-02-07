@@ -75,6 +75,7 @@
     <Compile Include="Assets\VRTemplateAssets\Scripts\CalloutGazeController.cs" />
     <Compile Include="Assets\Scripts\PerformanceManager.cs" />
     <Compile Include="Assets\Scripts\SettingsManager.cs" />
+    <Compile Include="Assets\TestBatonText.cs" />
     <Compile Include="Assets\Scripts\Stick.cs" />
     <Compile Include="Assets\Scripts\StickManager.cs" />
     <Compile Include="Assets\VRTemplateAssets\Scripts\BezierCurve.cs" />

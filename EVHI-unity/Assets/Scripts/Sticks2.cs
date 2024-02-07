@@ -90,7 +90,6 @@ public class Stick2 : MonoBehaviour {
     /// This function is called by the Stick Manager.
     /// </remarks>
     public void DropStick() {
-        Debug.Log("DropStick");
         // On récupère le rigidbody du stick
         Rigidbody rb = GetComponent<Rigidbody>();
         // On active le rigidbody
