@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1740,11 +1740,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4134505312059479865, guid: 895f6f3c2d334633b5800312285058d2, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.7
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4134505312059479865, guid: 895f6f3c2d334633b5800312285058d2, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -3.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4134505312059479865, guid: 895f6f3c2d334633b5800312285058d2, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1808,11 +1808,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7696548424635294051, guid: 895f6f3c2d334633b5800312285058d2, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.125
+      value: -0.38
       objectReference: {fileID: 0}
     - target: {fileID: 7696548424635294051, guid: 895f6f3c2d334633b5800312285058d2, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 2.125
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7696548424635294051, guid: 895f6f3c2d334633b5800312285058d2, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1833,6 +1833,10 @@ PrefabInstance:
     - target: {fileID: 8677371567480465662, guid: 895f6f3c2d334633b5800312285058d2, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9014170783728641054, guid: 895f6f3c2d334633b5800312285058d2, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.38
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 3127728407712097239, guid: 895f6f3c2d334633b5800312285058d2, type: 3}
@@ -3488,7 +3492,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6598815579406187037, guid: 18ddb545287c546e19cc77dc9fbb2189, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4595,6 +4599,7 @@ MonoBehaviour:
   distleft: 0
   distright: 0
   stickId: 0
+  fallingSound: {fileID: 0}
 --- !u!114 &1685559464
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5315,9 +5320,21 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4507527679045315899, guid: 2b6dc05d9d84fc24d9450013087a74ca, type: 3}
+      propertyPath: scoreText
+      value: 
+      objectReference: {fileID: 7081840893009087835}
+    - target: {fileID: 4507527679045315899, guid: 2b6dc05d9d84fc24d9450013087a74ca, type: 3}
+      propertyPath: failedText
+      value: 
+      objectReference: {fileID: 9125794425331195112}
+    - target: {fileID: 4507527679045315899, guid: 2b6dc05d9d84fc24d9450013087a74ca, type: 3}
       propertyPath: ScoreManager
       value: 
       objectReference: {fileID: 1469210285}
+    - target: {fileID: 4507527679045315899, guid: 2b6dc05d9d84fc24d9450013087a74ca, type: 3}
+      propertyPath: stickLeftText
+      value: 
+      objectReference: {fileID: 1279872486}
     - target: {fileID: 4507527679045315899, guid: 2b6dc05d9d84fc24d9450013087a74ca, type: 3}
       propertyPath: gameStatusText
       value: 

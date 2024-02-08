@@ -28,6 +28,9 @@ public class StickManager : MonoBehaviour
 
     private GameState gameState;
 
+    private List<int> remainingFall;
+    private bool hasStartedGame;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -49,6 +52,7 @@ public class StickManager : MonoBehaviour
     void Update()
     {
         gameState = performanceManagerScript.getGameState();
+
         lock ("lockStats")
         {
             if (ScoreManager.GetComponent<ScoreManager>().IsStickSpeedsReady)
@@ -112,15 +116,41 @@ public class StickManager : MonoBehaviour
     {
         if (gameState == GameState.Playing)
         {
-            int nbChildren = transform.childCount; // On récupère le nombre d'enfants de l'empty "Stick Manager"
-            int randomIndex = Random.Range(0, nbChildren); // On récupère un nombre aléatoire entre 0 et le nombre d'enfants
+            if (hasStartedGame == false)
+            {
+                hasStartedGame = true;
+                remainingFall = new List<int>();
+                for (int i = 0; i < 10; i++)
+                {
+                    remainingFall.Add(i);
+                }
+                //shuffle the list
+                for (int i = 0; i < remainingFall.Count; i++)
+                {
+                    int temp = remainingFall[i];
+                    int randomIndex = Random.Range(i, remainingFall.Count);
+                    remainingFall[i] = remainingFall[randomIndex];
+                    remainingFall[randomIndex] = temp;
+                }
+                //debug log the list
+                for (int i = 0; i < remainingFall.Count; i++)
+                {
+                    Debug.Log(remainingFall[i]);
+                }
+            }
+            else
+            {
+                //pop the last element of remainingFall
+                int randomIndex = remainingFall[remainingFall.Count - 1];
+                remainingFall.RemoveAt(remainingFall.Count - 1);
+                
+                GameObject stickParent = transform.GetChild(randomIndex).gameObject;
+                //get child object
+                GameObject stick = stickParent.transform.GetChild(0).gameObject;
+                Stick stickScript = stick.GetComponent<Stick>();
 
-            GameObject stickParent = transform.GetChild(randomIndex).gameObject;
-            //get child object
-            GameObject stick = stickParent.transform.GetChild(0).gameObject;
-            Stick stickScript = stick.GetComponent<Stick>();
-
-            stickScript.DropStick();
+                stickScript.DropStick();
+            }
         }
     }
 }
