@@ -103,7 +103,7 @@ public class PerformanceManager : MonoBehaviour
     {
         foreach (GameObject stick in listSticks)
         {
-            Stick2 s = stick.GetComponent<Stick2>();
+            Stick s = stick.GetComponent<Stick>();
             if (isLeftHand)
                 s.updateDistOnGrabLeft(leftHand.transform.position);
             else

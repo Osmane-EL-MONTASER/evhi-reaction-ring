@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Stick : MonoBehaviour {
-    //Set stick initial position
-    private Vector3 initialPosition;
+
+    //private PerformanceManager performanceManagerScript;
 
     public float respawnTimer = 3.0f;
     public float respawnTime;
@@ -17,24 +17,28 @@ public class Stick : MonoBehaviour {
     public GameObject scoreManager;
 
     private float stickSpeed = 1.0f;
+    private float fallTime;
+
+    private GameObject perfManager;
+
+    public float distleft;
+    public float distright;
+
+    public int stickId;
 
     // Start is called before the first frame update
     void Start() {
-        initialPosition = transform.position;
         scoreManager = GameObject.Find("Score Manager");
+        perfManager = GameObject.Find("Performance Manager");
+        distleft = Mathf.Infinity;
+        distright = Mathf.Infinity;
     }
 
     // Update is called once per frame
     void Update() {
         if (Time.time > respawnTime && needRespawn)
         {
-            Rigidbody rb = GetComponent<Rigidbody>();
-            rb.velocity = Vector3.zero;
-            transform.position = initialPosition;
-            needRespawn = false;
-            isFalling = false;
-            isGrabbed = false;
-            //Debug.Log("Respawn");
+            ResetStick();
         }
     }
 
@@ -42,7 +46,7 @@ public class Stick : MonoBehaviour {
     {
         Rigidbody rb = GetComponent<Rigidbody>();
         rb.velocity = Vector3.zero;
-        transform.position = initialPosition;
+        transform.localPosition = new Vector3(0, -1, 0);
         needRespawn = false;
         isFalling = false;
         isGrabbed = false;
@@ -56,8 +60,10 @@ public class Stick : MonoBehaviour {
             //Debug.Log("Fall");
             respawnTime = respawnTimer + Time.time;
             needRespawn = true;
-            if (!isGrabbed)
+            if (!isGrabbed){
                 scoreManager.GetComponent<ScoreManager>().AddFailed(1);
+                perfManager.GetComponent<PerformanceManager>().addPerfList(returnMinDist(),stickId);
+            }
         }
     }
 
@@ -68,7 +74,12 @@ public class Stick : MonoBehaviour {
             //Debug.Log("Grab");
             isGrabbed = true;
             scoreManager.GetComponent<ScoreManager>().AddScore(1);
+            transform.position = new Vector3(-5,-5,-5);
+            respawnTime = respawnTimer + Time.time;
+            needRespawn = true;
+            perfManager.GetComponent<PerformanceManager>().addPerfList(0.0f,stickId);
         }
+        //SetStickLength(2.0f); //test size change when grabbed
     }
 
     /// <summary>
@@ -79,14 +90,14 @@ public class Stick : MonoBehaviour {
     /// This function is called by the Stick Manager.
     /// </remarks>
     public void DropStick() {
-        //Debug.Log("DropStick");
         // On récupère le rigidbody du stick
         Rigidbody rb = GetComponent<Rigidbody>();
         // On active le rigidbody
         rb.isKinematic = false;
         // On applique une force au stick pour le faire tomber
-        rb.AddForce(Vector3.down * stickSpeed);
+        rb.AddForce(Vector3.down * (stickSpeed * 6));
         isFalling = true;
+        fallTime = Time.time;
     }
 
     /// <summary>
@@ -94,18 +105,55 @@ public class Stick : MonoBehaviour {
     /// </summary>
     public void SetStickLength(float length) {
         Transform stickTransform = GetComponent<Transform>();
-        Vector3 scale = stickTransform.localScale;
+        //Get parent transform
+        Transform parentTransform = stickTransform.parent;
+
+        Vector3 scale = parentTransform.localScale;
         
         // On modifie le scale du stick
-        scale.z = length;
+        scale.y = length;
         // On applique le nouveau scale au stick
-        stickTransform.localScale = scale;
-
-        // Add the length difference with a base scale 1.0f to the stick's Y position
-        stickTransform.position -= new Vector3(0.0f, (length - 1.0f) / 2.0f, 0.0f);
+        parentTransform.localScale = scale;
     }
 
     public void SetStickSpeed(float speed) {
         stickSpeed = speed;
+    }
+
+    public bool getIsGrabbed(){
+        return isGrabbed;
+    }
+
+    public float getFallTime(){
+        return fallTime;
+    }
+
+    public void updateDistOnGrabRight(Vector3 handPosRight)
+    {
+        if (isFalling && !isGrabbed)
+        {
+            //get closest distance from collider to hand
+            distright = Math.Min(distright, Vector3.Distance(handPosRight, GetComponent<Collider>().ClosestPoint(handPosRight)));
+        }
+    }
+
+    public void updateDistOnGrabLeft(Vector3 handPosLeft)
+    {
+        if (isFalling && !isGrabbed)
+        {
+            //get closest distance from collider to hand
+            distleft = Math.Min(distleft, Vector3.Distance(handPosLeft, GetComponent<Collider>().ClosestPoint(handPosLeft)));
+        }
+    }
+
+    /// <summary>
+    /// Return the minimum distance between the stick and the hands we obtained.
+    /// </summary>
+    /// <returns></returns>
+    public float returnMinDist()
+    {
+        if (isGrabbed) //if stick is grabbed return directly 0
+            return 0;
+        return Math.Min(distleft, distright);
     }
 }

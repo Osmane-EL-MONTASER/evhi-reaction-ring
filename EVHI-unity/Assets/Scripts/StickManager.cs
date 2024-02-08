@@ -21,30 +21,40 @@ public class StickManager : MonoBehaviour
 
     public TMPro.TextMeshProUGUI gameStatusText;
 
+    public TMPro.TextMeshProUGUI scoreText;
+    public TMPro.TextMeshProUGUI failedText;
+
+    public TMPro.TextMeshProUGUI stickLeftText;
+
+    private GameState gameState;
+
     // Start is called before the first frame update
     void Start()
     {
-        // On rescale tous les sticks pour qu'ils aient la bonne longueur
         int nbChildren = transform.childCount; // On récupère le nombre d'enfants de l'empty "Stick Manager"
         for (int i = 0; i < nbChildren; i++)
         {
-            GameObject stick = transform.GetChild(i).gameObject;
+            GameObject stickParent = transform.GetChild(i).gameObject;
+            GameObject stick = stickParent.transform.GetChild(0).gameObject;
             Stick stickScript = stick.GetComponent<Stick>();
 
             stickScript.SetStickLength(baseStickLength);
         }
     
         performanceManagerScript = performanceManager.GetComponent<PerformanceManager>();
+        gameState = performanceManagerScript.getGameState();
     }
 
     // Update is called once per frame
     void Update()
     {
+        gameState = performanceManagerScript.getGameState();
         lock ("lockStats")
         {
             if (ScoreManager.GetComponent<ScoreManager>().IsStickSpeedsReady)
             {
                 gameStatusText.text = "Jeu en cours... Attrapez les bâtons avec les manettes dès qu'ils tombent !";
+                stickLeftText.text = "Bâtons restants : 0 / 10. Bon courage !"; 
                 ScoreManager.GetComponent<ScoreManager>().IsStickSpeedsReady = false;
                 ScoreManager.GetComponent<ScoreManager>().isFirstLaunch = false;
 
@@ -52,10 +62,10 @@ public class StickManager : MonoBehaviour
                 int nbChildren = transform.childCount; // On récupère le nombre d'enfants de l'empty "Stick Manager"
                 for (int i = 0; i < nbChildren; i++)
                 {
-                    GameObject stick = transform.GetChild(i).gameObject;
+                    GameObject stick = transform.GetChild(i).GetChild(0).gameObject;
                     Stick stickScript = stick.GetComponent<Stick>();
-
                     stickScript.SetStickSpeed(ScoreManager.GetComponent<ScoreManager>().StickSpeeds[i]);
+                    stickScript.SetStickLength(ScoreManager.GetComponent<ScoreManager>().StickLength[i]);
                 }
 
                 m_stickFellCount = 0;
@@ -71,6 +81,9 @@ public class StickManager : MonoBehaviour
             else
             {
                 gameStatusText.text = "Round terminé ! Envoi des données de jeu...";
+                scoreText.text = "0";
+                failedText.text = "0";
+                stickLeftText.text = "Plus de bâtons ! Appuyez sur le bouton pour rejouer..."; 
                 //Debug.Log("Waiting for the next stick speeds...");
             }
         }
@@ -81,7 +94,8 @@ public class StickManager : MonoBehaviour
             int nbChildren = transform.childCount; // On récupère le nombre d'enfants de l'empty "Stick Manager"
             for (int i = 0; i < nbChildren; i++)
             {
-                GameObject stick = transform.GetChild(i).gameObject;
+                GameObject stickParent = transform.GetChild(i).gameObject;
+                GameObject stick = stickParent.transform.GetChild(0).gameObject;
                 Stick stickScript = stick.GetComponent<Stick>();
 
                 stickScript.ResetStick();
@@ -96,12 +110,17 @@ public class StickManager : MonoBehaviour
     /// </summary>
     public void DropRandomStick()
     {
-        int nbChildren = transform.childCount; // On récupère le nombre d'enfants de l'empty "Stick Manager"
-        int randomIndex = Random.Range(0, nbChildren); // On récupère un nombre aléatoire entre 0 et le nombre d'enfants
+        if (gameState == GameState.Playing)
+        {
+            int nbChildren = transform.childCount; // On récupère le nombre d'enfants de l'empty "Stick Manager"
+            int randomIndex = Random.Range(0, nbChildren); // On récupère un nombre aléatoire entre 0 et le nombre d'enfants
 
-        GameObject stick = transform.GetChild(randomIndex).gameObject;
-        Stick stickScript = stick.GetComponent<Stick>();
+            GameObject stickParent = transform.GetChild(randomIndex).gameObject;
+            //get child object
+            GameObject stick = stickParent.transform.GetChild(0).gameObject;
+            Stick stickScript = stick.GetComponent<Stick>();
 
-        stickScript.DropStick();
+            stickScript.DropStick();
+        }
     }
 }
