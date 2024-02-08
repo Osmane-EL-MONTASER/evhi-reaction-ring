@@ -52,7 +52,9 @@ public class StickManager : MonoBehaviour
     void Update()
     {
         gameState = performanceManagerScript.getGameState();
-
+        if (gameState == GameState.End){
+            hasStartedGame = false;
+        }
         lock ("lockStats")
         {
             if (ScoreManager.GetComponent<ScoreManager>().IsStickSpeedsReady)

@@ -127,6 +127,7 @@ public class PerformanceManager : MonoBehaviour
         {
             perf = getPerfExp(dist);
         }
+        perf /= 2;
         testText.GetComponent<TMPro.TextMeshProUGUI>().text = perf.ToString();
     }
     public void addPerfList(float dist, int index){
@@ -141,7 +142,12 @@ public class PerformanceManager : MonoBehaviour
             perf = getPerfExp(dist);
             Debug.Log("perf : " + perf);
         }
-        listPerf.Add(perf);
+        if(perf != 1) 
+            listPerf.Add(perf / 2);
+        else
+            listPerf.Add(perf);
+        
+        
         stickOrder.Add(index);
         stickFellCount++;
         if (stickFellCount == stickAmount)
