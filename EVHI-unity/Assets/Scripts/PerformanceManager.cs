@@ -152,7 +152,7 @@ public class PerformanceManager : MonoBehaviour
             lock ("performances")
             {
                 ScoreManager comp = scoreManager.GetComponent<ScoreManager>();
-                comp.perfList = new List(getAllStickPerf());
+                comp.perfList = new List<float>(getAllStickPerf());
                 setGameState(GameState.End);
             }
             listPerf = new List<float>();
