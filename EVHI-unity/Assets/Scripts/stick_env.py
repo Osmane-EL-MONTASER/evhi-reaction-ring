@@ -54,12 +54,17 @@ class CustomStickEnv(gym.Env):
         self.scale = 20  # Ajustez cette valeur pour rendre la fonction de récompense plus ou moins pénalisante
         
         # Create a file begining with "performance_" and ending with the date and time
-        self.file = open(f'./logs_stats/performance_{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}.txt', 'w')
+        self.perffile = f'./logs_stats/performance_{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}.txt'
+        self.file = open(self.perffile, 'w')
         self.file.close()
         
         # Create a file begining with "reward_" and ending with the date and time
-        self.file = open(f'./logs_stats/reward_{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}.txt', 'w')
+        self.rewardfile = f'./logs_stats/reward_{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}.txt'
+        self.file = open(self.rewardfile, 'w')
         self.file.close()
+        
+        self.performances = []
+        self.rewards = []
         
     def step(self, action):
         # Appliquer l'action au jeu et obtenir la nouvelle performance
@@ -96,15 +101,19 @@ class CustomStickEnv(gym.Env):
         performance = np.mean(performances) / 100
         
         # Add the performance in performance file
-        self.file = open(f'./logs_stats/performance_{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}.txt', 'ab')
-        np.savetxt(self.file, np.array([reward]), newline=' ')
+        self.performances.append(performance)
+        f = open(self.perffile, 'ab')
+        np.savetxt(f, np.array([performance]), newline=', ')
+        f.close()
         
         # Calculer la récompense
         reward += self.reward_function_1(performance)
         
         # Append the reward in the file with numpy
-        self.f = open(f'./logs_stats/reward_{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}.txt', 'ab')
-        np.savetxt(self.file, np.array([reward]), newline=' ')
+        self.rewards.append(reward)
+        f2 = open(self.rewardfile, 'ab')
+        np.savetxt(f2, np.array([reward]), newline=', ')
+        f2.close()
 
         # Vérifier si l'épisode est terminé
         done = True
