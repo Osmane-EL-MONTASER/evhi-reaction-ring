@@ -66,6 +66,7 @@ public class StickManager1 : MonoBehaviour
                     Stick2 stickScript = stick.GetComponent<Stick2>();
                     stickScript.SetStickSpeed(ScoreManager.GetComponent<ScoreManager>().StickSpeeds[i]);
                     stickScript.SetStickLength(ScoreManager.GetComponent<ScoreManager>().StickLength[i]);
+                    Debug.Log("Stick " + i + " length : " + ScoreManager.GetComponent<ScoreManager>().StickLength[i]);
                 }
 
                 m_stickFellCount = 0;

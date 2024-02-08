@@ -17,9 +17,9 @@ checkpoint_callback = CheckpointCallback(
 )
 
 # Load the last model trained
-model = PPO.load("./logs/rl_model_5_steps", env=env)
+#model = PPO.load("./logs/rl_model_5_steps", env=env)
 
-#model = PPO("MlpPolicy", env, verbose=1)
+model = PPO("MlpPolicy", env, verbose=1)
 
 # Train the agent and save it each episode
 model.learn(total_timesteps=150000, log_interval=10, callback=checkpoint_callback)

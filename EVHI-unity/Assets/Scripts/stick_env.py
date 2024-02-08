@@ -5,6 +5,8 @@ import numpy as np
 # Import the socket module
 import socket
 
+from datetime import datetime
+
 # Paramètres pour la simulation
 target_performance = 85  # Performance cible
 scale = 20  # Échelle pour la fonction de récompense
@@ -13,9 +15,9 @@ NB_STICKS = 10
 NB_PARAMS = 2
 
 # Vitesses possibles pour les bâtons
-possibleSpeeds = [1, 2, 4, 6, 8, 12, 16, 24, 32, 48, 64]
+possibleSpeeds = np.arange(1, 32, 1)
 # Longueurs possibles pour les bâtons
-possibleLengths = [0.1, 0.2, 0.4, 0.6, 0.8, 1.2, 1.6]
+possibleLengths = np.arange(0.4, 1.4, 0.1)
 
 class CustomStickEnv(gym.Env):
     metadata = {'render.modes': ['human']}
@@ -50,7 +52,15 @@ class CustomStickEnv(gym.Env):
         # Définissez la performance cible et l'échelle de la fonction de récompense
         self.target_performance = target_performance
         self.scale = 20  # Ajustez cette valeur pour rendre la fonction de récompense plus ou moins pénalisante
-
+        
+        # Create a file begining with "performance_" and ending with the date and time
+        self.file = open(f'./logs_stats/performance_{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}.txt', 'w')
+        self.file.close()
+        
+        # Create a file begining with "reward_" and ending with the date and time
+        self.file = open(f'./logs_stats/reward_{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}.txt', 'w')
+        self.file.close()
+        
     def step(self, action):
         # Appliquer l'action au jeu et obtenir la nouvelle performance
         #performance = simulate_performance(action[0], action[1], action[2]) for debugging purpose
@@ -72,7 +82,7 @@ class CustomStickEnv(gym.Env):
         performances = self.s.recv(1024)
         
         # Convert the performance to a list of floats
-        performances = np.fromstring(performances[1:-1], sep=' ')
+        performances = np.fromstring(performances[1:-1], sep=' ') * 100
         print(f'Received Performances: {performances}')
         
         # If there is a performance between 0.7 and 1.0 in performances , we will set the reward to 50.0 else 0.0
@@ -85,8 +95,16 @@ class CustomStickEnv(gym.Env):
         # Calculate the mean performance
         performance = np.mean(performances) / 100
         
+        # Add the performance in performance file
+        self.file = open(f'./logs_stats/performance_{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}.txt', 'ab')
+        np.savetxt(self.file, np.array([reward]), newline=' ')
+        
         # Calculer la récompense
         reward += self.reward_function_1(performance)
+        
+        # Append the reward in the file with numpy
+        self.f = open(f'./logs_stats/reward_{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}.txt', 'ab')
+        np.savetxt(self.file, np.array([reward]), newline=' ')
 
         # Vérifier si l'épisode est terminé
         done = True
@@ -126,4 +144,5 @@ class CustomStickEnv(gym.Env):
 
     def close(self):
         self.s.close()
+        self.file.close()
         pass
